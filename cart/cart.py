@@ -12,14 +12,7 @@ class ProductDict(TypedDict):
     price: str
 
 
-class ProductDictIter(TypedDict):
-    quantity: int
-    price: Decimal
-    product: Product
-    total_price: Decimal
-
-
-class CartItem(NamedTuple):
+class CartItem(TypedDict):
     quantity: int
     price: Decimal
     product: Product
@@ -91,12 +84,12 @@ class Cart:
         for product in products:
             cart[str(product.id)]['product'] = product
 
-        cart: Dict[str, ProductDictIter]
+        cart: Dict[str, CartItem]
 
         for item in cart.values():
             item['price'] = Decimal(item['price'])
             item['total_price'] = item['price'] * item['quantity']
-            yield CartItem(**item)
+            yield item
 
     def __len__(self):
         return sum(item['quantity'] for item in self.cart.values())

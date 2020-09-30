@@ -1,10 +1,17 @@
+from typing import TypedDict
+
 from django.http import HttpRequest
 from django.views.decorators.http import require_POST
 from django.shortcuts import render, redirect, get_object_or_404
 
-from .cart import Cart
+from .cart import Cart, CartItem
 from .forms import CardAddProductForm
 from shop.models import Product
+
+
+class CartItemDetail(CartItem):
+    update_quantity_form: CardAddProductForm
+
 
 
 @require_POST
@@ -28,6 +35,14 @@ def cart_remove(request: HttpRequest, product_id):
 
 def cart_detail(request: HttpRequest):
     cart = Cart(request)
+
+    for item in cart:
+        item: CartItemDetail
+        item['update_quantity_form'] = CardAddProductForm(initial={
+            'quantity': item['quantity'],
+            'override': True,
+        })
+
     context = {
         'cart': cart
     }
