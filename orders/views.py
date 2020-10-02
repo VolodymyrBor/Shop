@@ -1,6 +1,7 @@
 from django.http import HttpRequest
 from django.shortcuts import render
 
+from .tasks import order_created
 from .models import Order, OrderItem
 from .forms import OrderCreateForm
 from cart.cart import Cart
@@ -20,6 +21,9 @@ def order_create(request: HttpRequest):
                     quantity=item['quantity'],
                 )
             cart.clear()
+
+            order_created.delay(order.id)
+
             context = {
                 'order': order,
             }

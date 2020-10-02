@@ -1,5 +1,3 @@
-from typing import TypedDict
-
 from django.http import HttpRequest
 from django.views.decorators.http import require_POST
 from django.shortcuts import render, redirect, get_object_or_404
@@ -11,7 +9,6 @@ from shop.models import Product
 
 class CartItemDetail(CartItem):
     update_quantity_form: CardAddProductForm
-
 
 
 @require_POST
