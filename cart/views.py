@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .cart import Cart, CartItem
 from .forms import CardAddProductForm
 from shop.models import Product
+from coupons.forms import CouponApplyForm
 
 
 class CartItemDetail(CartItem):
@@ -40,7 +41,10 @@ def cart_detail(request: HttpRequest):
             'override': True,
         })
 
+    coupon_apply_form = CouponApplyForm()
+
     context = {
-        'cart': cart
+        'cart': cart,
+        'coupon_apply_form': coupon_apply_form,
     }
     return render(request, 'cart/detail.html', context)

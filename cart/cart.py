@@ -1,10 +1,11 @@
 from decimal import Decimal
-from typing import TypedDict, Dict, Iterator, NamedTuple
+from typing import TypedDict, Dict, Iterator, NamedTuple, Optional
 
 from django.conf import settings
 from django.http import HttpRequest
 
 from shop.models import Product
+from coupons.models import Coupon
 
 
 class ProductDict(TypedDict):
@@ -27,6 +28,7 @@ class Cart:
         if not cart:
             cart = self.session[settings.CART_SESSION_ID] = {}
         self.cart: Dict[str, ProductDict] = cart
+        self.coupon_id = self.session.get('coupon_id')
 
     def add(self, product: Product, quantity: int = 1, override_quantity=False):
         """
@@ -75,6 +77,23 @@ class Cart:
         """
         del self.session[settings.CART_SESSION_ID]
         self.save()
+
+    @property
+    def coupon(self) -> Optional[Coupon]:
+        if self.coupon_id:
+            try:
+                return Coupon.objects.get(id=self.coupon_id)
+            except Coupon.DoesNotExist:
+                pass
+        return None
+
+    def get_discount(self):
+        if self.coupon:
+            return (self.coupon.discount / Decimal(100)) * self.get_total_price()
+        return Decimal(0)
+
+    def get_total_price_after_discount(self):
+        return self.get_total_price() - self.get_discount()
 
     def __iter__(self) -> Iterator[CartItem]:
         product_ids = self.cart.keys()
