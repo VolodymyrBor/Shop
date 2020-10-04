@@ -3,6 +3,7 @@ from django.conf import settings
 from django.http import HttpRequest
 from django.shortcuts import render, redirect, get_object_or_404
 
+from .tasks import payment_completed
 from orders.models import Order
 
 
@@ -27,6 +28,7 @@ def payment_process(request: HttpRequest):
             order.paid = True
             order.braintree_id = result.transaction.id
             order.save()
+            payment_completed.delay(order.id)
             return redirect('payment:done')
         else:
             return redirect('payment:canceled')
