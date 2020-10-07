@@ -14,7 +14,10 @@ services:
       - RABBITMQ_USERNAME=shop
       - RABBITMQ_PASSWORD=shop
 
-  myapp:
-    image: 'rabbitmq'
-    networks:
-      - app-tier
+  redis-master:
+    image: 'bitnami/redis:latest'
+    container_name: 'shop-redis'
+    ports:
+      - '6379'
+    environment:
+      - REDIS_PASSWORD=shop

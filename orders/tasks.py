@@ -9,13 +9,13 @@ from myShop.celery_shop import app
 def order_created(order_id: int):
     """
     Task to send an e-mail notification when order is successfully created.
-    :param order_id: Order id
+    :param order_id: Order pk
     """
-    order = Order.objects.get(id=order_id)
-    subject = f'Order nr. {order.id}'
+    order = Order.objects.get(pk=order_id)
+    subject = f'Order nr. {order.pk}'
     message = f'Dear {order.first_name},\n\n' \
               f'You have successfully placed an order.' \
-              f'Your order ID is {order.id}'
+              f'Your order ID is {order.pk}'
     mail_sent = send_mail(
         subject,
         message,

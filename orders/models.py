@@ -27,7 +27,7 @@ class Order(models.Model):
         ordering = ('-created', )
 
     def __str__(self):
-        return f'Order ({self.id})'
+        return f'Order ({self.pk})'
 
     def get_total_cost(self):
         total_cost = sum(item.get_total_cost() for item in self.items.all())
@@ -43,7 +43,7 @@ class OrderItem(models.Model):
     product = models.ForeignKey(Product, related_name='order_items', on_delete=models.CASCADE)
 
     def __str__(self):
-        return str(self.id)
+        return str(self.pk)
 
     def get_total_cost(self):
         return self.price * self.quantity

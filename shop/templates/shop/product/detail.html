@@ -15,12 +15,32 @@
             </a>
         </h2>
         <p class="price">$ {{ product.price }}</p>
-        <form action="{% url "cart:cart_add" product.id%}" method="post">
+        <form action="{% url "cart:cart_add" product.pk %}" method="post">
             {{ cart_product_form }}
             {% csrf_token %}
             <input type="submit" value="Add to cart">
         </form>
         {{ product.description|linebreaks }}
+        {% if recommended_products %}
+            <div class="recommendations">
+                <h3>People who bought this also  bought</h3>
+                {% for product in recommended_products %}
+                    <div class="item">
+                        <a href="{{ product.get_absolute_url }}">
+                            <img
+                                    src="{% if product.image %}
+                                            {{ product.image.url }}
+                                            {% else %}
+                                            {% static "img/no_image.png" %}
+                                            {% endif %}
+                                    "
+                            >
+                        </a>
+                        <p><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
     </div>
 
 {% endblock content %}

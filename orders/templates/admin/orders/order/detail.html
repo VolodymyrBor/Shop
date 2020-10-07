@@ -1,20 +1,20 @@
 {% extends "admin/base_site.html" %}
 
 {% block title %}
-    Order {{ order.id }} {{ block.super }}
+    Order {{ order.pk }} {{ block.super }}
 {% endblock title %}
 
 {% block breadcrumbs %}
     <div class="breadcrumbs">
         <a href="{% url "admin:index" %}">Home</a> &rsaquo;
         <a href="{% url "admin:orders_order_changelist" %}">Orders</a> &rsaquo;
-        <a href="{% url "admin:orders_order_change" order.id %}">Order {{ order.id }}</a> &rsaquo;
+        <a href="{% url "admin:orders_order_change" order.pk %}">Order {{ order.pk }}</a> &rsaquo;
         Detail
     </div>
 {% endblock breadcrumbs %}
 
 {% block content %}
-    <h1>Order {{ order.id }}</h1>
+    <h1>Order {{ order.pk }}</h1>
     <ul class="object-tools">
         <li>
             <a href="#" onclick="window.print()">Print order</a>

@@ -39,7 +39,7 @@ class OrderItemInline(admin.TabularInline):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('id', 'first_name', 'last_name',
+    list_display = ('pk', 'first_name', 'last_name',
                     'email', 'address', 'postal_code',
                     'city', 'paid', 'created', 'updated',
                     'order_detail', 'order_pdf', )
@@ -49,12 +49,12 @@ class OrderAdmin(admin.ModelAdmin):
 
     @staticmethod
     def order_detail(order: Order):
-        url = reverse('orders:admin_order_detail', args=[order.id])
+        url = reverse('orders:admin_order_detail', args=[order.pk])
         return mark_safe(f'<a href="{url}">View</a>')
 
     @staticmethod
     def order_pdf(order: Order):
-        url = reverse('orders:admin_order_pdf', args=[order.id])
+        url = reverse('orders:admin_order_pdf', args=[order.pk])
         return mark_safe(f'<a href="{url}">PDF</a>')
 
     order_pdf.short_description = 'Invoice'

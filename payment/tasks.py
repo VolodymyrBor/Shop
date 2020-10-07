@@ -17,9 +17,9 @@ def payment_completed(order_id):
     :param order_id:
     """
 
-    order = Order.objects.get(id=order_id)
+    order = Order.objects.get(pk=order_id)
 
-    subject = f'My Shop - EE Invoice no. {order.id}'
+    subject = f'My Shop - EE Invoice no. {order.pk}'
     message = 'Please, find attached the invoice for you recent purchase.'
     email = EmailMessage(subject, message, settings.EMAIL_HOST_USER, [order.email])
 
@@ -28,5 +28,5 @@ def payment_completed(order_id):
     stylesheet = weasyprint.CSS(os.path.join(settings.STATIC_ROOT, 'css/pdf.css'))
     weasyprint.HTML(string=html).write_pdf(out, stylesheets=[stylesheet])
 
-    email.attach(f'order_{order.id}.pdf', out.getvalue(), 'application/pdf')
+    email.attach(f'order_{order.pk}.pdf', out.getvalue(), 'application/pdf')
     email.send()

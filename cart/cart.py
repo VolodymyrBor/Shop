@@ -1,5 +1,5 @@
 from decimal import Decimal
-from typing import TypedDict, Dict, Iterator, NamedTuple, Optional
+from typing import TypedDict, Dict, Iterator, Optional
 
 from django.conf import settings
 from django.http import HttpRequest
@@ -37,7 +37,7 @@ class Cart:
         :param quantity:
         :param override_quantity: if true change exist quantity of the product
         """
-        product_id = str(product.id)
+        product_id = str(product.pk)
         if product_id not in self.cart:
             self.cart[product_id] = ProductDict(quantity=0, price=str(product.price))
 
@@ -59,7 +59,7 @@ class Cart:
         Remove product from cart
         :param product:
         """
-        product_id = str(product.id)
+        product_id = str(product.pk)
         if product_id in self.cart:
             del self.cart[product_id]
             self.save()
@@ -82,7 +82,7 @@ class Cart:
     def coupon(self) -> Optional[Coupon]:
         if self.coupon_id:
             try:
-                return Coupon.objects.get(id=self.coupon_id)
+                return Coupon.objects.get(pk=self.coupon_id)
             except Coupon.DoesNotExist:
                 pass
         return None
@@ -101,7 +101,7 @@ class Cart:
 
         cart: dict = self.cart.copy()
         for product in products:
-            cart[str(product.id)]['product'] = product
+            cart[str(product.pk)]['product'] = product
 
         cart: Dict[str, CartItem]
 
